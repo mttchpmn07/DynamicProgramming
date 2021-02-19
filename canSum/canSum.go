@@ -19,15 +19,12 @@ func canSum(targetSum int, numbers []int) bool {
 	if targetSum < 0 {
 		return false
 	}
-	bools := make([]bool, len(numbers))
-	for i, num := range numbers {
-		bools[i] = canSum(targetSum-num, numbers)
-	}
-	for _, b := range bools {
-		if b {
+	for _, num := range numbers {
+		if canSum(targetSum-num, numbers) {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -41,16 +38,14 @@ func canSumMem(targetSum int, numbers []int, memo map[int]bool) bool {
 	if targetSum < 0 {
 		return false
 	}
-	bools := make([]bool, len(numbers))
-	for i, num := range numbers {
-		bools[i] = canSumMem(targetSum-num, numbers, memo)
-	}
-	for _, b := range bools {
-		if b {
+
+	for _, num := range numbers {
+		if canSumMem(targetSum-num, numbers, memo) {
 			memo[targetSum] = true
 			return true
 		}
 	}
+
 	memo[targetSum] = false
 	return false
 }
