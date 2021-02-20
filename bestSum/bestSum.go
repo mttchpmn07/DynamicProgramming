@@ -27,7 +27,6 @@ func bestSumMemo(targetSum int, numbers []int, memo map[int][]int) []int {
 		return nil
 	}
 	var shortestPath []int
-	shortestPath = nil
 	for _, num := range numbers {
 		if adds := bestSumMemo(targetSum-num, numbers, memo); adds != nil {
 			adds = append(adds, num)
@@ -57,7 +56,6 @@ func bestSum(targetSum int, numbers []int) []int {
 		return nil
 	}
 	var shortestPath []int
-	shortestPath = nil
 	for _, num := range numbers {
 		if adds := bestSum(targetSum-num, numbers); adds != nil {
 			adds = append(adds, num)
