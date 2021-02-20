@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "howSum"
+		},
+		{
+			"path": "bestSum"
 		}
 	]
 }
