@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 /*
 				allConstruct
@@ -12,29 +15,67 @@ import "fmt"
 
 */
 
-func allConstruct(target string, wordBank []string) [][]string {
-	/*
-		if len(target) == 0 {
-			return 1
-		}
-		sum := int(0)
-		for _, word := range wordBank {
-			if strings.HasPrefix(target, word) {
-				sum += countConstruct(strings.TrimPrefix(target, word), wordBank)
+func prepend(a []string, b string) []string {
+	return append([]string{b}, a...)
+}
+
+func allConstructMemo(target string, wordBank []string, memo map[string][][]string) [][]string {
+	if v, ok := memo[target]; ok {
+		return v
+	}
+	if len(target) == 0 {
+		return nil
+	}
+	waysToConstruct := [][]string{}
+	for _, word := range wordBank {
+		if strings.HasPrefix(target, word) {
+			ways := allConstructMemo(strings.TrimPrefix(target, word), wordBank, memo)
+			for i, way := range ways {
+				ways[i] = prepend(way, word)
+			}
+			if ways == nil {
+				ways = [][]string{{word}}
+			}
+			for _, way := range ways {
+				waysToConstruct = append(waysToConstruct, way)
 			}
 		}
-		return sum
-	*/
+	}
 
-	return [][]string{}
+	memo[target] = waysToConstruct
+	return waysToConstruct
+}
+
+func allConstruct(target string, wordBank []string) [][]string {
+	if len(target) == 0 {
+		return nil
+	}
+	waysToConstruct := [][]string{}
+	for _, word := range wordBank {
+		if strings.HasPrefix(target, word) {
+			ways := allConstruct(strings.TrimPrefix(target, word), wordBank)
+			for i, way := range ways {
+				ways[i] = prepend(way, word)
+			}
+			if ways == nil {
+				ways = [][]string{{word}}
+			}
+			for _, way := range ways {
+				waysToConstruct = append(waysToConstruct, way)
+			}
+		}
+	}
+
+	return waysToConstruct
 }
 
 func main() {
+	fmt.Println(allConstruct("purple", []string{"purp", "p", "ur", "le", "purpl"}))
 	fmt.Println(allConstruct("abcdef", []string{"ab", "abc", "cd", "def", "abcd", "ef"}))
 	fmt.Println(allConstruct("", []string{"ab", "abc", "cd", "def", "abcd"}))
 	fmt.Println(allConstruct("abcdef", []string{}))
 	fmt.Println(allConstruct("enterapotentpot", []string{"a", "p", "ent", "enter", "ot", "o", "t"}))
-	fmt.Println(allConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef", []string{
+	fmt.Println(allConstructMemo("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef", []string{
 		"e",
 		"ee",
 		"eee",
@@ -42,6 +83,5 @@ func main() {
 		"eeeeee",
 		"eeeeeee",
 		"eeeeeeee",
-	})) //, make(map[string]int)))
-
+	}, make(map[string][][]string)))
 }
