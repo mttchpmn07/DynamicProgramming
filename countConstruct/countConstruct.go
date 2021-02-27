@@ -24,8 +24,7 @@ func countConstructMemo(target string, wordBank []string, memo map[string]int) i
 	sum := int(0)
 	for _, word := range wordBank {
 		if strings.HasPrefix(target, word) {
-			memo[target] = countConstructMemo(strings.TrimPrefix(target, word), wordBank, memo)
-			sum += memo[target]
+			sum += countConstructMemo(strings.TrimPrefix(target, word), wordBank, memo)
 		}
 	}
 	memo[target] = sum
